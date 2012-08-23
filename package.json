@@ -1,0 +1,26 @@
+{
+  "author": "Simon Tabor <me@simontabor.com> (simontabor.com)",
+  "name": "templr",
+  "description": "Easy static site generator",
+  "version": "0.0.0",
+  "homepage": "simontabor.com/templr",
+  "repository": {
+    "url": ""
+  },
+  "dependencies": {
+    "ejs": "0.8.2",
+    "express": "3.0.0rc3",
+    "rimraf": "2.0.2",
+    "cli": "0.4.4"
+    },
+  "devDependencies": {
+    },
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  },
+  "main": "./templr",
+  "bin": {
+    "templr": "./templr.js"
+  }
+}
