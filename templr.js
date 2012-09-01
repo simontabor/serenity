@@ -2,26 +2,34 @@
 
 var cli = require('cli'),
 fs = require('fs'),
-config,
 regen = require('./regenerate.js'), // the file regeneration script
 root = process.cwd(), // where templr has been executed from.
-files; // array of files within the directory
+files, // array of files within the directory
+config = require('./defaults.json');
 
 cli.parse({
-  port:  ['p', 'Listen on this port - overrides any config values', 'number', 4000]
+  port:  ['p', 'Listen on this port - overrides any config values', 'number', 4000],
+  server: ['s', 'Start up a server for the static files', 'boolean', true]
 });
 
 cli.main(function (args,options) {
-console.log('Templr watching: ' + root);
+  cli.ok('Templr watching: ' + root);
+
+  // sort out config
+  var usrconfig = {};
   try {
-    config = require('./templr.json');
+    usrconfig = require(root+'/templr.json');
   }catch(e) {
-    config = {
-      ignore: ['templr.json','README.md']
-    };
-    cli.error('No config file found at ./templr.json');
+    cli.info('No config file found at '+root+'/templr.json');
   }
+
+  for (var i in usrconfig) {
+    config[i] = usrconfig[i]; // override defaults if specified
+  }
+
+  // this is the walk function, it goes through all files and directories
   var walk = function(dir, done) {
+    cli.debug('Reading directory '+dir);
     var results = [];
     fs.readdir(dir, function(err, list) {
       if (err) return done(err);
@@ -33,7 +41,11 @@ console.log('Templr watching: ' + root);
 
           var path = file.split('/');
 
-          if (path[path.length-1] == '_site') {
+          var ignored = false;
+          for (var i = 0; i< (config.ignore || []).length; i++) { // loop through config to search file dir
+            if (~file.indexOf(config.ignore[i])) ignored = true;
+          }
+          if (path[path.length-1].substr(0,1) == '_' || ignored) {
             if (!--pending) done(null, results);
           }else{
             if (stat && stat.isDirectory()) {
@@ -50,18 +62,26 @@ console.log('Templr watching: ' + root);
       });
     });
   };
+
+
+
   var fileChanged = function (curr, prev) {
     if (curr.mtime > prev.mtime) {
-      cli.debug('File changed, regenerating.');
+      cli.info('File changed, regenerating.');
       regen(files,config);
     }
   };
 
   // lets start walking through our root!
   walk('.',function(err,list) {
+    if (err) {
+      cli.error('Error walking through files, please try again');
+      return;
+    }
     files = list;
     regen(files,config);
     for (var i = 0; i < list.length; i++) {
+      // using watchFile because watch isn't supported everywhere, not ideal
       fs.watchFile(list[i],{interval:100},fileChanged);
     }
   });
