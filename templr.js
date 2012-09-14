@@ -49,9 +49,7 @@ cli.main(function (args,options) {
       list.forEach(function(file) {
         file = dir + '/'+file;
         fs.stat(file, function(err, stat) {
-
           var path = file.split('/');
-
           var ignored = false;
           for (var i = 0; i< (config.ignore || []).length; i++) { // loop through config to search file dir
             if (~file.indexOf(config.ignore[i])) ignored = true;
@@ -74,8 +72,6 @@ cli.main(function (args,options) {
     });
   };
 
-
-
   var fileChanged = function (curr, prev) {
     if (curr.mtime > prev.mtime) {
       cli.info('File changed, regenerating.');
@@ -90,6 +86,7 @@ cli.main(function (args,options) {
       return;
     }
     files = list;
+    cli.info('Just started, regenerating.');
     regen(files,config);
     for (var i = 0; i < list.length; i++) {
       // using watchFile because watch isn't supported everywhere, not ideal
@@ -97,4 +94,3 @@ cli.main(function (args,options) {
     }
   });
 });
-

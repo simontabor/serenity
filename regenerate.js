@@ -43,20 +43,20 @@ module.exports = function(files,config) {
     cli.debug('Deleted ./_site');
     fs.mkdir('./_site',function() {
      cli.debug('Created ./_site');
-     for (var i = 0; i< files.length; i++) {
-      var path = files[i].substr(1,files[i].length);
-      var patharr = files[i].substr(2,files[i].length).split('/');
-      var filename = patharr[patharr.length -1];
+      for (var i = 0; i< files.length; i++) {
+        var path = files[i].substr(1,files[i].length);
+        var patharr = files[i].substr(2,files[i].length).split('/');
+        var filename = patharr[patharr.length -1];
 
-      for (var j=0;j<patharr.length-1;j++) {
-        var dir = '';
-        for (var p = 0; p<=j;p++) {
-          dir+=patharr[p]+'/';
+        for (var j=0;j<patharr.length-1;j++) {
+          var dir = '';
+          for (var p = 0; p<=j;p++) {
+            dir+=patharr[p]+'/';
+          }
+          fs.mkdir('./_site/'+dir);
         }
-        fs.mkdir('./_site/'+dir);
+        read(files[i],path);
       }
-      read(files[i],path);
-    }
-  });
+    });
   });
 };
