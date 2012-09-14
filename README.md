@@ -4,7 +4,8 @@ An easy system for generating (and local development of) static sites, using var
 
 This is a WIP and it will be a while until it's stable for proper use. Please use with caution!
 
-Not currently available on npm so install should be done by pulling this repositry, changing to the directory then running ```bash
+Not currently available on npm so install should be done by pulling this repositry, changing to the directory then running 
+```bash
 $ npm install -g .
 ```
 ##Install
