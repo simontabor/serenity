@@ -21,7 +21,7 @@ cli.main(function (args,options) {
     require('http').createServer(function (request, response) {
       cli.debug(request.method+': '+request.url);
       request.addListener('end', function () {
-          file.serve(request, response);
+        file.serve(request, response);
       });
     }).listen(options.port);
   }
