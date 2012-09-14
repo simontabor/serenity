@@ -5,7 +5,8 @@ fs = require('fs'),
 regen = require('./regenerate.js'), // the file regeneration script
 root = process.cwd(), // where templr has been executed from.
 files, // array of files within the directory
-config = require('./defaults.json');
+config = require('./defaults.json'),
+server = require('node-static');
 
 cli.parse({
   port:  ['p', 'Listen on this port - overrides any config values', 'number', 4000],
@@ -14,6 +15,16 @@ cli.parse({
 
 cli.main(function (args,options) {
   cli.ok('Templr watching: ' + root);
+
+  if (options.server) {
+    var file = new server.Server('./_site', { cache: 1 });
+    require('http').createServer(function (request, response) {
+      cli.debug(request.method+': '+request.url);
+      request.addListener('end', function () {
+          file.serve(request, response);
+      });
+    }).listen(options.port);
+  }
 
   // sort out config
   var usrconfig = {};

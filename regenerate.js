@@ -14,7 +14,6 @@ module.exports = function(files,config) {
       pathy = path.split('.');
       var ext = pathy[pathy.length-1];
       pathy[pathy.length-1] = 'html';
-      path = pathy.join('.');
       if (ext == 'ejs') {
         renderejs(file,path);
       }
@@ -36,6 +35,7 @@ module.exports = function(files,config) {
       site: config
     });
     fs.writeFile('./_site'+path,html,function(err) {
+      if (err) cli.error(err);
     });
   };
 
