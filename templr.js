@@ -24,6 +24,7 @@ cli.main(function (args,options) {
         file.serve(request, response);
       });
     }).listen(options.port);
+    cli.ok('Server started on port '+options.port);
   }
 
   // sort out config

@@ -12,7 +12,8 @@
     "node-static": "~0.6.1",
     "cli": "~0.4.4-1",
     "rimraf": "~2.0.2",
-    "ejs-templr": "https://github.com/simontabor/ejs-templr/tarball/master"
+    "ejs-templr": "https://github.com/simontabor/ejs-templr/tarball/master",
+    "fs-extra": "~0.2.1"
   },
   "devDependencies": {},
   "optionalDependencies": {},

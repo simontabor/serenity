@@ -1,6 +1,5 @@
 var ejs = require('ejs-templr'),
-fs = require('fs'),
-rm = require('rimraf'),
+fs = require('fs-extra'),
 cli = require('cli');
 
 module.exports = function(files,config) {
@@ -10,6 +9,8 @@ module.exports = function(files,config) {
     var ext = pathy[pathy.length-1];
     if (ext == 'ejs') {
       renderejs(filepath,path);
+    }else{
+      fs.copy(filepath,'_site/'+path); // just copy the file over otherwise
     }
   };
 
@@ -30,7 +31,7 @@ module.exports = function(files,config) {
     
   };
 
-  rm('./_site',function() {
+  fs.remove('./_site',function() {
     cli.debug('Deleted ./_site');
     fs.mkdir('./_site',function() {
      cli.debug('Created ./_site');
