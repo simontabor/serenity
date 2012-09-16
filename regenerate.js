@@ -1,4 +1,4 @@
-var ejs = require('ejs'),
+var ejs = require('ejs-templr'),
 fs = require('fs'),
 rm = require('rimraf'),
 cli = require('cli');
@@ -6,37 +6,28 @@ cli = require('cli');
 module.exports = function(files,config) {
 
   var read = function(filepath,path) {
-    fs.readFile(filepath,'ascii',function(err,file) {
-      if (err) {
-        cli.error('Error reading '+filepath);
-        return;
-      }
-      pathy = path.split('.');
-      var ext = pathy[pathy.length-1];
-      pathy[pathy.length-1] = 'html';
-      if (ext == 'ejs') {
-        renderejs(file,path);
-      }
-    });
+    var pathy = path.split('.');
+    var ext = pathy[pathy.length-1];
+    if (ext == 'ejs') {
+      renderejs(filepath,path);
+    }
   };
 
-  var renderejs = function(file,path) {
-    var opts;
-    try {
-      opts = JSON.parse(file.split('______')[0]);
-    }catch(e) {
-      cli.info('No config specified for '+path);
-      opts = {};
-    }
+  var renderejs = function(filepath,path) {
     path = path.replace('.ejs','.html');
-    opts.path = path;
-    var html = ejs.render(file.split('______')[1] || file,{
+    var opts = {
+      path: path
+    };
+    var html = ejs.renderFile(filepath,{
       page: opts,
       site: config
+    },function(err,html) {
+      if (err) return cli.error(err);
+      fs.writeFile('./_site'+path,html,function(err) {
+        if (err) cli.error(err);
+      });
     });
-    fs.writeFile('./_site'+path,html,function(err) {
-      if (err) cli.error(err);
-    });
+    
   };
 
   rm('./_site',function() {

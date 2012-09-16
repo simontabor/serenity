@@ -6,13 +6,13 @@
   "homepage": "simontabor.com/templr",
   "preferGlobal": true,
   "repository": {
-    "url": ""
+    "url": "git@github.com:simontabor/templr.git"
   },
   "dependencies": {
     "node-static": "~0.6.1",
     "cli": "~0.4.4-1",
     "rimraf": "~2.0.2",
-    "ejs": "~0.8.2"
+    "ejs-templr": "https://github.com/simontabor/ejs-templr/tarball/master"
   },
   "devDependencies": {},
   "optionalDependencies": {},
