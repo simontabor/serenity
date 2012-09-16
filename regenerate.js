@@ -38,6 +38,7 @@ module.exports = function(files,config) {
       for (var i = 0; i< files.length; i++) {
         var path = files[i].substr(1,files[i].length);
         var patharr = files[i].substr(2,files[i].length).split('/');
+        if (patharr[0].substr(0,1) == '_') continue;
         var filename = patharr[patharr.length -1];
 
         for (var j=0;j<patharr.length-1;j++) {

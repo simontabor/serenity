@@ -55,7 +55,7 @@ cli.main(function (args,options) {
           for (var i = 0; i< (config.ignore || []).length; i++) { // loop through config to search file dir
             if (~file.indexOf(config.ignore[i])) ignored = true;
           }
-          if (path[path.length-1].substr(0,1) == '_' || ignored) {
+          if (path[path.length-1] == '_site' || ignored) {
             if (!--pending) done(null, results);
           }else{
             if (stat && stat.isDirectory()) {
