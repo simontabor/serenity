@@ -61,10 +61,16 @@ converter.prototype.convert = function(file) {
     if (json) {
       conversion = json+'\n______\n'+conversion;
     }
-    fs.writeFile(file,conversion,function(err) {
+    fs.unlink(file,function(err) {
       if (err) {
         cli.error(err);
-        cli.error('Error converting file '+file);
+        cli.error('Error deleting file '+file);
+      }
+    });
+    fs.writeFile(file.replace('.html','.ejs'),conversion,function(err) {
+      if (err) {
+        cli.error(err);
+        cli.error('Error writing file '+file.replace('.html','.ejs'));
       }
     });
 
