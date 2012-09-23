@@ -8,10 +8,9 @@ module.exports = function(files,config) {
     var pathy = path.split('.');
     var ext = pathy[pathy.length-1];
     if (ext == 'ejs') {
-      renderejs(filepath,path);
-    }else{
-      fs.copy(filepath,'_site/'+path); // just copy the file over otherwise
+      return renderejs(filepath,path);
     }
+    fs.copy(filepath,'_site/'+path); // just copy the file over otherwise
   };
 
   var renderejs = function(filepath,path) {
