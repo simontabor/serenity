@@ -107,17 +107,19 @@ converter.prototype.translateLiquid = function(str) {
     var statement = splitty.join(' ');
     switch(fctn) {
       case 'if':
-        return '<% if ('+statement+') { %>';
+        return '<% if ('+statement.replace(/ or /g,' || ').replace(/ and /g,' && ')+') { %>';
       case 'else':
         return '<% } else { %>';
       case 'elsif':
-        return '<% } else if ('+statement+') { %>';
+        return '<% } else if ('+statement.replace(/ or /g,' || ').replace(/ and /g,' && ')+') { %>';
       case 'unless':
-        return '<% if (!('+statement+')) { %>';
+        return '<% if (!('+statement.replace(/ or /g,' || ').replace(/ and /g,' && ')+')) { %>';
       case 'for':
         // unfortunately for i in arr returns the actual element of the array in liquid
         // so we need to do smart stuff later on
         return '<% for (var '+statement+') { %>';
+      case 'endfor':
+        return '<% endfor %>';
       case 'include':
         return '<% include '+statement+' %>';
       case 'assign':
@@ -126,6 +128,14 @@ converter.prototype.translateLiquid = function(str) {
         return '<% /* %>';
       case 'endcomment':
         return '<% */ %>';
+      case 'capture':
+        return '<% capture %>';
+      case 'endcapture':
+        return '<% endcapture %>';
+      case 'case':
+        return '<% switch ('+statement+') { %>';
+      case 'endcase':
+        return '<% endswitch %>';
     }
     
     if (fctn.substr(0,3) == 'end') return '<% } %>';
@@ -133,7 +143,44 @@ converter.prototype.translateLiquid = function(str) {
     console.log(fctn,statement);
     return '<% UNKNOWN TAG '+fctn+''+statement+' %>';
   });
+  str = str.replace(/<% capture %>(.*?)<% endcapture %>/g,function(s,main) {
+    cli.info('CAPTURE');
+    console.log(main);
+    return s;
+  });
+  str = str.replace(/<% for (.*?) { %>((.|\n)*?)<% endfor %>/g,function(s,statement,main) {
+    cli.info('FOR LOOP');
+    var vars = statement.split(' ');
+    vars.shift(); //remove var
+    var orig = vars.shift();
+    if (vars[0] == 'in') vars.shift();
+    var variable = vars[0].split(')')[0];
 
+    var limit = variable+'.length';
+    if (statement.split('limit:')[1]) {
+      // limit is defined;
+      limit = statement.split('limit:')[1].split(' ')[0];
+    }
+    var offset = '0';
+    if (statement.split('offset:')[1]) {
+      // offset is defined
+      offset = statement.split('offset:')[1].split(' ')[0];
+    }
+    if (~statement.indexOf('reversed')) {
+      return '<% /* reverse me */ %>';
+    }
+
+    return '<% var forloop = {length: ('+limit+'-'+offset+'), first:true,last:false,rindex: ('+limit+'-'+offset+')}; for (forloop.index = '+offset+'; forloop.index < '+limit+'; forloop.index++) { '+
+      'var '+orig+' = '+variable+'[forloop.index]; forloop.first = ('+offset+' == forloop.index); forloop.last = ('+limit +' == forloop.index) %>'+
+      main+
+      '<% } %>';
+
+  });
+  str = str.replace(/<% switch (.*?) { %>((.|\n)*?)<% endswitch %>/g,function(s,statement,main) {
+    cli.info('SWITCH');
+    console.log(statement,main);
+    return s;
+  });
   return str;
 
 };
