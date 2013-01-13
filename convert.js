@@ -121,7 +121,7 @@ converter.prototype.translateLiquid = function(str) {
       case 'endfor':
         return '<% endfor %>';
       case 'include':
-        return '<% include '+statement+' %>';
+        return '<% include '+statement.replace('.html','.ejs')+' %>';
       case 'assign':
         return '<% var '+statement+' %>';
       case 'comment':
