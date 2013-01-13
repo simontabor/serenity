@@ -154,7 +154,15 @@ converter.prototype.translateLiquid = function(str) {
     vars.shift(); //remove var
     var orig = vars.shift();
     if (vars[0] == 'in') vars.shift();
-    var variable = vars[0].split(')')[0];
+    var variable = (vars[0].charAt(0) == '(' && vars[0].charAt(vars[0].length -1) == ')') ? vars[0].substr(1,vars[0].length-2) : vars[0];// remove brackets
+
+    var predefined = variable.split('..');
+    if (predefined[1]) {
+      // this is a predefined loop
+      return '<% for (var '+orig+'='+predefined[0]+'; '+orig+'<'+predefined[1]+'; '+orig+'++) {'+
+      main+
+      '<% } %>';
+    }
 
     var limit = variable+'.length';
     if (statement.split('limit:')[1]) {
@@ -170,8 +178,9 @@ converter.prototype.translateLiquid = function(str) {
       return '<% /* reverse me */ %>';
     }
 
-    return '<% var forloop = {length: ('+limit+'-'+offset+'), first:true,last:false,rindex: ('+limit+'-'+offset+')}; for (forloop.index = '+offset+'; forloop.index < '+limit+'; forloop.index++) { '+
-      'var '+orig+' = '+variable+'[forloop.index]; forloop.first = ('+offset+' == forloop.index); forloop.last = ('+limit +' == forloop.index) %>'+
+    return '<% var forloop = {length: ('+limit+'-'+offset+'),rindex: ('+limit+'-'+offset+')}; for (forloop.index = '+offset+'; forloop.index < '+limit+'; forloop.index++) { '+
+      'var '+orig+' = '+variable+'[forloop.index];'+
+      'forloop.first = ('+offset+' == forloop.index); forloop.last = ('+limit +' == forloop.index); %>'+
       main+
       '<% } %>';
 
