@@ -1,3 +1,0 @@
-{
-  "ignore": ["templr.json",".gitignore",".git","node_modules",".DS_Store","Gemfile","Gemfile.lock","Rakefile"]
-}
