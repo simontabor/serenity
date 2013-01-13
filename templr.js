@@ -4,10 +4,11 @@ var cli = require('cli'),
 fs = require('fs'),
 regen = require('./regenerate.js'), // the file regeneration script
 root = process.cwd(), // where templr has been executed from.
-files, // array of files within the directory
 convert = require('./convert.js'),
-config = require('./defaults.json'),
-server = require('node-static');
+config = require('./defaults.js'),
+server = require('node-static'),
+watchr = require('watchr'),
+findit = require('findit');
 
 cli.parse({
   port:  ['p', 'Listen on this port - overrides any config values', 'number', 4000],
@@ -15,52 +16,34 @@ cli.parse({
   convert: ['c', 'Convert Jekyll (YAML with Liquid) site to Templr (JSON with EJS)','boolean',false]
 });
 
-// this is the walk function, it goes through all files and directories
-var walk = function(dir, done) {
-  cli.debug('Reading directory '+dir);
-  var results = [];
-  fs.readdir(dir, function(err, list) {
-    if (err) return done(err);
-    var pending = list.length;
-    if (!pending) return done(null, results);
-    list.forEach(function(file) {
-      file = dir + '/'+file;
-      fs.stat(file, function(err, stat) {
-        var path = file.split('/');
-        var ignored = false;
-        for (var i = 0; i< (config.ignore || []).length; i++) { // loop through config to search file dir
-          if (~file.indexOf(config.ignore[i])) ignored = true;
-        }
-        if (path[path.length-1] == '_site' || ignored) {
-          if (!--pending) done(null, results);
-        }else{
-          if (stat && stat.isDirectory()) {
-            walk(file, function(err, res) {
-              results = results.concat(res);
-              if (!--pending) done(null, results);
-            });
-          } else {
-            results.push(file);
-            if (!--pending) done(null, results);
-          }
-        }
-      });
-    });
+
+var walk = function(dir,include,ignore,done) {
+  var files = [];
+  var finder = findit.find(root);
+  
+  finder.on('file',function(file,stat) {
+    if ((!include || include.test(file)) && (!ignore || !ignore.test(file))) files.push(file);
+  });
+  finder.on('end',function() {
+    cli.info('Finished reading directory '+dir);
+    done(null,files);
   });
 };
+
+
 
 cli.main(function (args,options) {
 
   if (options.convert) {
-    walk('.',function(err,list) {
+    walk(root, new RegExp('.*\\.html$'), new RegExp('.*/_site/.*'),function(err,list) {
+      // list of all html files, not in _site
       if (err) cli.fatal('Error walking through files, please try again');
-      
+      if (list.length < 1) cli.fatal('Could not find any files to convert');
       convert.run(list);
     });
     return; // we dont want to boot up
   }
 
-  cli.ok('Templr watching: ' + root);
 
   if (options.server) {
     var file = new server.Server('./_site', { cache: 1 });
@@ -76,35 +59,40 @@ cli.main(function (args,options) {
   // sort out config
   var usrconfig = {};
   try {
-    usrconfig = require(root+'/templr.json');
+    usrconfig = require(root+'/templr.js');
   }catch(e) {
-    cli.info('No config file found at '+root+'/templr.json');
+    cli.info('Config error at '+root+'/templr.js');
+    cli.error(e);
   }
 
   for (var i in usrconfig) {
+    if (!usrconfig.hasOwnProperty(i)) continue;
     config[i] = usrconfig[i]; // override defaults if specified
   }
 
+  var reg = '';
+  for (var i = 0; i < config.extensions.length;i++) {
+    // build the extensions regex to see what files to generate
+    reg+='.*\\.'+config.extensions[i]+(i<config.extensions.length-1 ? '$|' : '$');
+  }
+  // create the regex
+  reg = new RegExp(reg);
 
-  var fileChanged = function (curr, prev) {
-    if (curr.mtime > prev.mtime) {
-      cli.info('File changed, regenerating.');
-      regen(files,config);
+  config.watchr.next = function(err,watchers) {
+    cli.ok('Templr watching: ' + root);
+  };
+  config.watchr.listeners = {
+    change: function(changeType,file,fileStat,oldStat) {
+      cli.info('File changed, regenerating. '+file);
+      walk(root,reg,null,function(err,files) {
+        for (var i = 0; i < files.length; i++) {
+          files[i] = files[i].replace(root,'.');
+        }
+        regen(files,config);
+      });
     }
   };
+  watchr.watch(config.watchr);
 
-  // lets start walking through our root!
-  walk('.',function(err,list) {
-    if (err) {
-      cli.error('Error walking through files, please try again');
-      return;
-    }
-    files = list;
-    cli.info('Just started, regenerating.');
-    regen(files,config);
-    for (var i = 0; i < list.length; i++) {
-      // using watchFile because watch isn't supported everywhere, not ideal
-      fs.watchFile(list[i],{interval:100},fileChanged);
-    }
-  });
+
 });
