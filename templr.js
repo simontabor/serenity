@@ -46,11 +46,13 @@ cli.main(function (args,options) {
 
 
   if (options.server) {
-    var file = new server.Server('./_site', { cache: 1 });
+    var file = new server.Server(root+'/_site', { cache: 1 });
     require('http').createServer(function (request, response) {
       cli.debug(request.method+': '+request.url);
       request.addListener('end', function () {
-        file.serve(request, response);
+        file.serve(request, response).addListener('error', function(err) {
+          cli.error('Error serving '+request.url+' - '+err.message);
+        });
       });
     }).listen(options.port);
     cli.ok('Server started on port '+options.port);
