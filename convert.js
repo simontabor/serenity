@@ -14,11 +14,11 @@ converter.prototype.run = function(files) {
       if (ext == 'html') {
         self.convert(files[i]);
       }
-      if (files[i] == './_config.yml') {
-        fs.readFile('./_config.yml','utf-8',function(err,data) {
+      if (files[i].substr(-11) == '_config.yml') {
+        fs.readFile(files[i],'utf-8',function(err,data) {
           if (err) return cli.error('Error reading ./_config.yml');
           var json = self.convertyml(data);
-          fs.writeFile('./templr.json', JSON.stringify(json,null,2), function (err) {
+          fs.writeFile('./templr.js', 'var config = '+JSON.stringify(json,null,2)+';\n\nmodule.exports=config;', function (err) {
             if (err) return cli.error(err);
             cli.debug('Converted and saved config');
           });
@@ -117,7 +117,7 @@ converter.prototype.translateLiquid = function(str) {
       case 'for':
         // unfortunately for i in arr returns the actual element of the array in liquid
         // so we need to do smart stuff later on
-        return '<% for (var '+statement+') { %>';
+        return '<% for (var '+statement+' ) { %>';
       case 'endfor':
         return '<% endfor %>';
       case 'include':
@@ -141,12 +141,12 @@ converter.prototype.translateLiquid = function(str) {
     if (fctn.substr(0,3) == 'end') return '<% } %>';
 
     console.log(fctn,statement);
-    return '<% UNKNOWN TAG '+fctn+''+statement+' %>';
+    return '<% /* UNKNOWN TAG '+fctn+''+statement+' */ %>';
   });
   str = str.replace(/<% capture %>(.*?)<% endcapture %>/g,function(s,main) {
     cli.info('CAPTURE');
     console.log(main);
-    return s;
+    return '<% /* '+'capture'+' */ %>'; // commend out captures for now
   });
   str = str.replace(/<% for (.*?) { %>((.|\n)*?)<% endfor %>/g,function(s,statement,main) {
     cli.info('FOR LOOP');
@@ -178,7 +178,11 @@ converter.prototype.translateLiquid = function(str) {
       return '<% /* reverse me */ %>';
     }
 
-    return '<% var forloop = {length: ('+limit+'-'+offset+'),rindex: ('+limit+'-'+offset+')}; for (forloop.index = '+offset+'; forloop.index < '+limit+'; forloop.index++) { '+
+    return '<% var forloop = {'+
+      'length: ('+limit+'-'+offset+'),'+
+      'rindex: ('+limit+'-'+offset+')'+
+      '};'+
+      'for (forloop.index = '+offset+'; forloop.index < '+limit+'; forloop.index++) { '+
       'var '+orig+' = '+variable+'[forloop.index];'+
       'forloop.first = ('+offset+' == forloop.index); forloop.last = ('+limit +' == forloop.index); %>'+
       main+
@@ -188,7 +192,7 @@ converter.prototype.translateLiquid = function(str) {
   str = str.replace(/<% switch (.*?) { %>((.|\n)*?)<% endswitch %>/g,function(s,statement,main) {
     cli.info('SWITCH');
     console.log(statement,main);
-    return s;
+    return '<% /* '+main+' */%>';
   });
   return str;
 

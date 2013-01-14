@@ -35,7 +35,7 @@ var walk = function(dir,include,ignore,done) {
 cli.main(function (args,options) {
 
   if (options.convert) {
-    walk(root, new RegExp('.*\\.html$'), new RegExp('.*/_site/.*'),function(err,list) {
+    walk(root, new RegExp('.*\\.html$|.*_config\\.yml$'), new RegExp('.*/_site/.*'),function(err,list) {
       // list of all html files, not in _site
       if (err) cli.fatal('Error walking through files, please try again');
       if (list.length < 1) cli.fatal('Could not find any files to convert');
@@ -94,6 +94,13 @@ cli.main(function (args,options) {
       });
     }
   };
+  cli.info('Just booted. Regenerating.');
+  walk(root,reg,null,function(err,files) {
+    for (var i = 0; i < files.length; i++) {
+      files[i] = files[i].replace(root,'.');
+    }
+    regen(files,config);
+  });
   watchr.watch(config.watchr);
 
 
