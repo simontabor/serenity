@@ -33,6 +33,8 @@ Running the templr command will immediately start watching the current directory
 	<tr>
 		<td>-p</td><td>--port</td><td>Number. Specify the port for the server to use, defaults to 4000.</td>
 	</tr>
+	<tr>
+		<td>-c</td><td>--convert</td><td>Boolean. Default false. This will attempt to convert a Jekyll static site into a Templr one. Very beta. BEWARE!</td>
 </table>
 
 Configuration options can also be specified in a file named templr.json in the root of your directory. Usage and options for this will be documented soon.
