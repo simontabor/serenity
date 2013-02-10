@@ -13,7 +13,7 @@ findit = require('findit');
 cli.parse({
   port:  ['p', 'Listen on this port - overrides any config values', 'number', 4000],
   server: ['s', 'Start up a server for the static files', 'boolean', true],
-  convert: ['c', 'Convert Jekyll (YAML with Liquid) site to Templr (JSON with EJS)','boolean',false]
+  convert: ['c', 'Convert Jekyll (YAML with Liquid) site to Serenity (JSON with EJS)','boolean',false]
 });
 
 
@@ -81,7 +81,7 @@ cli.main(function (args,options) {
   reg = new RegExp(reg);
 
   config.watchr.next = function(err,watchers) {
-    cli.ok('Templr watching: ' + root);
+    cli.ok('Serenity watching: ' + root);
   };
   config.watchr.listeners = {
     change: function(changeType,file,fileStat,oldStat) {
