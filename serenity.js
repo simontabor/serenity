@@ -10,10 +10,12 @@ server = require('node-static'),
 watchr = require('watchr'),
 findit = require('findit');
 
+
 cli.parse({
-  port:  ['p', 'Listen on this port - overrides any config values', 'number', 4000],
   server: ['s', 'Start up a server for the static files', 'boolean', true],
-  convert: ['c', 'Convert Jekyll (YAML with Liquid) site to Serenity (JSON with EJS)','boolean',false]
+  port:  ['p', 'Listen on this port - overrides any config values', 'number', 4000],
+  convert: ['c', 'Convert Jekyll (YAML with Liquid) site to Serenity (JSON with EJS)'],
+  version: ['v','Shows the current Serenity version']
 });
 
 
@@ -30,9 +32,15 @@ var walk = function(dir,include,ignore,done) {
   });
 };
 
-
+var version = function() {
+  cli.info('serenity '+require('./package.json').version);
+};
 
 cli.main(function (args,options) {
+
+  if (options.version) {
+    return version();
+  }
 
   if (options.convert) {
     walk(root, new RegExp('.*\\.html$|.*_config\\.yml$'), new RegExp('.*/_site/.*'),function(err,list) {
