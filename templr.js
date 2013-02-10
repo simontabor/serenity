@@ -2,9 +2,9 @@
 
 var cli = require('cli'),
 fs = require('fs'),
-regen = require('./regenerate.js'), // the file regeneration script
+regen = require('./lib/regenerate.js'), // the file regeneration script
 root = process.cwd(), // where templr has been executed from.
-convert = require('./convert.js'),
+convert = require('./lib/convert.js'),
 config = require('./defaults.js'),
 server = require('node-static'),
 watchr = require('watchr'),
