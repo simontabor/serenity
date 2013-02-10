@@ -3,7 +3,7 @@
 var cli = require('cli'),
 fs = require('fs'),
 regen = require('./lib/regenerate.js'), // the file regeneration script
-root = process.cwd(), // where templr has been executed from.
+root = process.cwd(), // where serenity has been executed from.
 convert = require('./lib/convert.js'),
 config = require('./defaults.js'),
 server = require('node-static'),
@@ -61,9 +61,9 @@ cli.main(function (args,options) {
   // sort out config
   var usrconfig = {};
   try {
-    usrconfig = require(root+'/templr.js');
+    usrconfig = require(root+'/serenity.js');
   }catch(e) {
-    cli.info('Config error at '+root+'/templr.js');
+    cli.info('Config error at '+root+'/serenity.js');
     cli.error(e);
   }
 

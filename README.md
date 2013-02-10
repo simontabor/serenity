@@ -1,4 +1,4 @@
-# Templr
+# Serenity
 
 An easy system for generating (and local development of) static sites, using variables and templates.
 
@@ -10,17 +10,17 @@ $ npm install -g .
 ```
 ##Install
 ```bash
-$ npm install -g templr
+$ npm install -g serenity
 ```
 
 Note: may require sudo to install globally!
 
 ##Usage
 ```bash
-$ templr
+$ serenity
 ```
 
-Running the templr command will immediately start watching the current directory and build the site within ./_site. It will also serve the site on localhost:4000.
+Running the serenity command will immediately start watching the current directory and build the site within ./_site. It will also serve the site on localhost:4000.
 
 ##Options
 <table>
@@ -37,4 +37,4 @@ Running the templr command will immediately start watching the current directory
 		<td>-c</td><td>--convert</td><td>Boolean. Default false. This will attempt to convert a Jekyll static site into a Templr one. Very beta. BEWARE!</td>
 </table>
 
-Configuration options can also be specified in a file named templr.json in the root of your directory. Usage and options for this will be documented soon.
+Configuration options can also be specified in a file named serenity.json in the root of your directory. Usage and options for this will be documented soon.

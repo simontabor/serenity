@@ -1,12 +1,12 @@
 {
   "author": "Simon Tabor <me@simontabor.com> (simontabor.com)",
-  "name": "templr",
+  "name": "serenity",
   "description": "Easy static site generator",
   "version": "0.0.1",
-  "homepage": "simontabor.com/templr",
+  "homepage": "simontabor.com/serenity",
   "preferGlobal": true,
   "repository": {
-    "url": "git@github.com:simontabor/templr.git"
+    "url": "git@github.com:simontabor/serenity.git"
   },
   "dependencies": {
     "node-static": "~0.6.1",
@@ -22,8 +22,8 @@
   "engines": {
     "node": "*"
   },
-  "main": "./templr",
+  "main": "./serenity",
   "bin": {
-    "templr": "./templr.js"
+    "serenity": "./serenity.js"
   }
 }
