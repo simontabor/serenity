@@ -9,13 +9,14 @@
     "url": "git@github.com:simontabor/serenity.git"
   },
   "dependencies": {
-    "node-static": "~0.6.1",
     "cli": "~0.4.4-1",
     "ejs-templr": "https://github.com/simontabor/ejs-templr/tarball/master",
     "fs-extra": "~0.2.1",
     "js-yaml": "~1.0.2",
     "watchr": "~2.3.3",
-    "findit": "~0.1.2"
+    "findit": "~0.1.2",
+    "url": "~0.7.9",
+    "send": "~0.1.0"
   },
   "devDependencies": {},
   "optionalDependencies": {},

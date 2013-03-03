@@ -4,8 +4,8 @@ var config = {
     "ignoreCommonPatterns": true,
     "ignorePaths": [process.cwd()+'/_site']
 	},
-  extensions: ['ejs'] // files with these extensions will be parsed and output
-  
+  ignore: ['/_site'],
+  extensions: ['ejs','css','html','js'] // files with these extensions will be parsed and output
 };
 
 module.exports = config;

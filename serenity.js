@@ -6,7 +6,6 @@ regen = require('./lib/regenerate.js'), // the file regeneration script
 root = process.cwd(), // where serenity has been executed from.
 convert = require('./lib/convert.js'),
 config = require('./defaults.js'),
-server = require('node-static'),
 watchr = require('watchr'),
 findit = require('findit');
 
@@ -22,9 +21,11 @@ cli.parse({
 var walk = function(dir,include,ignore,done) {
   var files = [];
   var finder = findit.find(root);
-  
+
   finder.on('file',function(file,stat) {
-    if ((!include || include.test(file)) && (!ignore || !ignore.test(file))) files.push(file);
+    if ((!include || include.test(file)) && (!ignore || !ignore.test(file))) {
+      files.push(file);
+    }
   });
   finder.on('end',function() {
     cli.info('Finished reading directory '+dir);
@@ -52,16 +53,30 @@ cli.main(function (args,options) {
     return; // we dont want to boot up
   }
 
-
   if (options.server) {
-    var file = new server.Server(root+'/_site', { cache: 1 });
-    require('http').createServer(function (request, response) {
-      cli.debug(request.method+': '+request.url);
-      request.addListener('end', function () {
-        file.serve(request, response).addListener('error', function(err) {
-          cli.error('Error serving '+request.url+' - '+err.message);
-        });
-      });
+    var http = require('http');
+    var send = require('send');
+    var url = require('url');
+
+    var app = http.createServer(function(req, res){
+      cli.debug(req.method + ' ' + req.url);
+      function error(err) {
+        cli.debug('error serving '+req.url + ' ' +err.status);
+        res.statusCode = err.status || 500;
+        res.end(err.message);
+      }
+
+      function redirect() {
+        res.statusCode = 301;
+        res.setHeader('Location', req.url + '/');
+        res.end('Redirecting to ' + req.url + '/');
+      }
+
+      send(req, url.parse(req.url).pathname)
+      .root(root+'/_site')
+      .on('error', error)
+      .on('directory', redirect)
+      .pipe(res);
     }).listen(options.port);
     cli.ok('Server started on port '+options.port);
   }
@@ -81,12 +96,19 @@ cli.main(function (args,options) {
   }
 
   var reg = '';
-  for (var i = 0; i < config.extensions.length;i++) {
+  for (var i = 0; i < (config.extensions || []).length;i++) {
     // build the extensions regex to see what files to generate
     reg+='.*\\.'+config.extensions[i]+(i<config.extensions.length-1 ? '$|' : '$');
   }
   // create the regex
   reg = new RegExp(reg);
+
+  var ignore = '';
+  for (var i = 0; i < (config.ignore || []).length;i++) {
+    // build the extensions regex to see what files to generate
+    ignore+=root+config.ignore[i]+(i<config.ignore.length-1 ? '|' : '');
+  }
+  ignore = new RegExp(ignore);
 
   config.watchr.next = function(err,watchers) {
     cli.ok('Serenity watching: ' + root);
@@ -94,7 +116,7 @@ cli.main(function (args,options) {
   config.watchr.listeners = {
     change: function(changeType,file,fileStat,oldStat) {
       cli.info('File changed, regenerating. '+file);
-      walk(root,reg,null,function(err,files) {
+      walk(root,reg,ignore,function(err,files) {
         for (var i = 0; i < files.length; i++) {
           files[i] = files[i].replace(root,'.');
         }
@@ -103,7 +125,7 @@ cli.main(function (args,options) {
     }
   };
   cli.info('Just booted. Regenerating.');
-  walk(root,reg,null,function(err,files) {
+  walk(root,reg,ignore,function(err,files) {
     for (var i = 0; i < files.length; i++) {
       files[i] = files[i].replace(root,'.');
     }
