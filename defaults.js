@@ -5,7 +5,7 @@ var config = {
     "ignorePaths": [process.cwd()+'/_site']
 	},
   ignore: ['/_site'],
-  extensions: ['ejs','css','html','js'] // files with these extensions will be parsed and output
+  extensions: ['ejs','css','html','js','png','jpg'] // files with these extensions will be parsed and output
 };
 
 module.exports = config;
