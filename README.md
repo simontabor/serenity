@@ -4,18 +4,16 @@ An easy system for generating (and local development of) static sites, using var
 
 This is a WIP and it will be a while until it's stable for proper use. Please use with caution!
 
-Not currently published on npm so install should be done by pulling this repository, changing to the directory then running 
-```bash
-$ npm install -g .
-```
-##Install
+
+## Install
+
 ```bash
 $ npm install -g serenity
 ```
 
 Note: may require sudo to install globally!
 
-##Usage
+## Usage
 ```bash
 $ serenity
 ```
@@ -37,4 +35,4 @@ Running the serenity command will immediately start watching the current directo
 		<td>-c</td><td>--convert</td><td>Boolean. Default false. This will attempt to convert a Jekyll static site into a Templr one. Very beta. BEWARE!</td>
 </table>
 
-Configuration options can also be specified in a file named serenity.json in the root of your directory. Usage and options for this will be documented soon.
+Configuration options can also be specified in a file named serenity.js in the root of your directory. Usage and options for this will be documented soon.

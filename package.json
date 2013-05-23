@@ -3,7 +3,7 @@
   "name": "serenity",
   "description": "Easy static site generator",
   "version": "0.0.3",
-  "homepage": "simontabor.com/serenity",
+  "homepage": "http://simontabor.com/labs/serenity",
   "preferGlobal": true,
   "repository": {
     "url": "git@github.com:simontabor/serenity.git"
