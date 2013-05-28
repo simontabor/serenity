@@ -2,7 +2,8 @@
 
 var cli = require('cli'),
 fs = require('fs'),
-regen = require('./lib/regenerate.js'), // the file regeneration script
+Generator = require('./lib/generator.js'), // the file regeneration script
+
 root = process.cwd(), // where serenity has been executed from.
 convert = require('./lib/convert.js'),
 config = require('./defaults.js'),
@@ -120,7 +121,8 @@ cli.main(function (args,options) {
         for (var i = 0; i < files.length; i++) {
           files[i] = files[i].replace(root,'.');
         }
-        regen(files,config);
+        new Generator(files, config);
+
       });
     }
   };
@@ -129,7 +131,7 @@ cli.main(function (args,options) {
     for (var i = 0; i < files.length; i++) {
       files[i] = files[i].replace(root,'.');
     }
-    regen(files,config);
+    new Generator(files, config);
   });
   watchr.watch(config.watchr);
 
