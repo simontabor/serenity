@@ -8,7 +8,7 @@ root = process.cwd(), // where serenity has been executed from.
 convert = require('./lib/convert.js'),
 config = require('./defaults.js'),
 watchr = require('watchr'),
-findit = require('findit');
+walkdir = require('walkdir');
 
 
 cli.parse({
@@ -21,7 +21,7 @@ cli.parse({
 
 var walk = function(dir,include,ignore,done) {
   var files = [];
-  var finder = findit.find(root);
+  var finder = walkdir(root);
 
   finder.on('file',function(file,stat) {
     if ((!include || include.test(file)) && (!ignore || !ignore.test(file))) {

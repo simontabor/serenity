@@ -2,7 +2,7 @@
   "author": "Simon Tabor <me@simontabor.com> (simontabor.com)",
   "name": "serenity",
   "description": "Easy static site generator",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "homepage": "http://simontabor.com/labs/serenity",
   "preferGlobal": true,
   "repository": {
@@ -14,13 +14,13 @@
     "fs-extra": "~0.5.0",
     "js-yaml": "~1.0.2",
     "watchr": "~2.3.3",
-    "findit": "~0.1.2",
     "send": "~0.1.0",
     "less": "~1.3.3",
     "mincer": "~0.4.6",
     "sqwish": "~0.2.1",
     "uglify-js": "~2.3.6",
-    "html-minifier": "~0.5.2"
+    "html-minifier": "~0.5.2",
+    "walkdir": "0.0.7"
   },
   "devDependencies": {},
   "optionalDependencies": {},
