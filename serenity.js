@@ -8,7 +8,8 @@ root = process.cwd(), // where serenity has been executed from.
 convert = require('./lib/convert.js'),
 config = require('./defaults.js'),
 watchr = require('watchr'),
-walkdir = require('walkdir');
+walkdir = require('walkdir'),
+url = require('url');
 
 
 cli.parse({
@@ -68,9 +69,11 @@ cli.main(function (args,options) {
       }
 
       function redirect() {
+        var u = url.parse(req.url);
+        var loc = u.pathname + '/' + (u.search || '');
         res.statusCode = 301;
-        res.setHeader('Location', req.url + '/');
-        res.end('Redirecting to ' + req.url + '/');
+        res.setHeader('Location', loc);
+        res.end('Redirecting to ' + loc);
       }
 
       send(req, url.parse(req.url).pathname)
