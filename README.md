@@ -26,7 +26,7 @@ Running the serenity command will immediately start watching the current directo
 		<th>Short</th><th>Long</th><th>Description</th>
 	</tr>
 	<tr>
-		<td>-s</td><td>--server</td><td>true or false, defaults to true. Specify whether or not you want a server to be started.</td>
+		<td></td><td>--no-server</td><td>If specified, no server will be started and the process will exit after generating the site.</td>
 	</tr>
 	<tr>
 		<td>-p</td><td>--port</td><td>Number. Specify the port for the server to use, defaults to 4000.</td>

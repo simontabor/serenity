@@ -13,7 +13,7 @@ url = require('url');
 
 
 cli.parse({
-  server: ['s', 'Start up a server for the static files', 'boolean', true],
+  'no-server': [false, 'Don\'t start a server and exit after generation', 'boolean', false],
   port:  ['p', 'Listen on this port - overrides any config values', 'number', 4000],
   convert: ['c', 'Convert Jekyll (YAML with Liquid) site to Serenity (JSON with EJS)'],
   version: ['v','Shows the current Serenity version']
@@ -55,7 +55,7 @@ cli.main(function (args,options) {
     return; // we dont want to boot up
   }
 
-  if (options.server) {
+  if (!options['no-server']) {
     var http = require('http');
     var send = require('send');
     var url = require('url');
@@ -134,7 +134,13 @@ cli.main(function (args,options) {
     for (var i = 0; i < files.length; i++) {
       files[i] = files[i].replace(root,'.');
     }
-    new Generator(files, config);
+    new Generator(files, config, function() {
+      cli.ok('Generated site');
+      if (!options['no-server']) return;
+
+      cli.info('Exiting');
+      process.exit();
+    });
   });
   watchr.watch(config.watchr);
 
