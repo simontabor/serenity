@@ -124,7 +124,9 @@ cli.main(function (args,options) {
         for (var i = 0; i < files.length; i++) {
           files[i] = files[i].replace(root,'.');
         }
-        new Generator(files, config);
+        new Generator(files, config, function() {
+          cli.ok('Generated site');
+        });
 
       });
     }
