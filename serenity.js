@@ -107,25 +107,32 @@ cli.main(function (args,options) {
   // create the regex
   reg = new RegExp(reg);
 
-  var ignore = '';
-  for (var i = 0; i < (config.ignore || []).length;i++) {
-    // build the extensions regex to see what files to generate
-    ignore+=root+config.ignore[i]+(i<config.ignore.length-1 ? '|' : '');
-  }
+  var ignore = config.ignore.map(function(i){ return root + i; }).join('|');
   ignore = new RegExp(ignore);
 
   config.watchr.next = function(err,watchers) {
     cli.ok('Serenity watching: ' + root);
   };
+
+  var generator;
+
   config.watchr.listeners = {
     change: function(changeType,file,fileStat,oldStat) {
+
+      if (generator) generator.cancel();
+
       cli.info('File changed, regenerating. '+file);
       walk(root,reg,ignore,function(err,files) {
         for (var i = 0; i < files.length; i++) {
           files[i] = files[i].replace(root,'.');
         }
-        new Generator(files, config, function() {
-          cli.ok('Generated site');
+        if (generator) generator.cancel();
+        generator = new Generator(files, config, function(err) {
+          if (err === 'cancelled') {
+            cli.info('Cancelled regeneration');
+          } else {
+            cli.ok('Generated site');
+          }
         });
 
       });
@@ -136,7 +143,7 @@ cli.main(function (args,options) {
     for (var i = 0; i < files.length; i++) {
       files[i] = files[i].replace(root,'.');
     }
-    new Generator(files, config, function() {
+    generator = new Generator(files, config, function() {
       cli.ok('Generated site');
       if (!options['no-server']) return;
 
