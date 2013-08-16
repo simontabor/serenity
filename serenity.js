@@ -16,7 +16,8 @@ cli.parse({
   'no-server': [false, 'Don\'t start a server and exit after generation', 'boolean', false],
   port:  ['p', 'Listen on this port - overrides any config values', 'number', 4000],
   convert: ['c', 'Convert Jekyll (YAML with Liquid) site to Serenity (JSON with EJS)'],
-  version: ['v','Shows the current Serenity version']
+  version: ['v','Shows the current Serenity version'],
+  asset_host: ['a', 'Define an asset host (such as a CDN) for all compiled assets', 'string', '']
 });
 
 
@@ -98,6 +99,9 @@ cli.main(function (args,options) {
     if (!usrconfig.hasOwnProperty(i)) continue;
     config[i] = usrconfig[i]; // override defaults if specified
   }
+  if (options.asset_host) {
+    config.asset_host = options.asset_host;
+  }
 
   var reg = '';
   for (var i = 0; i < (config.extensions || []).length;i++) {
@@ -122,6 +126,8 @@ cli.main(function (args,options) {
       if (generator) generator.cancel();
 
       cli.info('File changed, regenerating. '+file);
+      var start = Date.now();
+
       walk(root,reg,ignore,function(err,files) {
         for (var i = 0; i < files.length; i++) {
           files[i] = files[i].replace(root,'.');
@@ -131,7 +137,7 @@ cli.main(function (args,options) {
           if (err === 'cancelled') {
             cli.info('Cancelled regeneration');
           } else {
-            cli.ok('Generated site');
+            cli.ok('Generated site in ' + (Date.now() - start) + 'ms');
           }
         });
 
@@ -139,12 +145,14 @@ cli.main(function (args,options) {
     }
   };
   cli.info('Just booted. Regenerating.');
+  var start = Date.now();
+
   walk(root,reg,ignore,function(err,files) {
     for (var i = 0; i < files.length; i++) {
       files[i] = files[i].replace(root,'.');
     }
     generator = new Generator(files, config, function() {
-      cli.ok('Generated site');
+      cli.ok('Generated site in ' + (Date.now() - start) + 'ms');
       if (!options['no-server']) return;
 
       cli.info('Exiting');
