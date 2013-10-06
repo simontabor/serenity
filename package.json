@@ -20,7 +20,8 @@
     "sqwish": "~0.2.1",
     "uglify-js": "~2.3.6",
     "html-minifier": "~0.5.2",
-    "walkdir": "0.0.7"
+    "walkdir": "0.0.7",
+    "ejs2": "~2.1.0"
   },
   "devDependencies": {},
   "optionalDependencies": {},
