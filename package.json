@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "cli": "~0.4.4-1",
-    "ejs-templr": "https://github.com/simontabor/ejs-templr/tarball/master",
     "fs-extra": "~0.5.0",
     "js-yaml": "~1.0.2",
     "watchr": "~2.3.3",
