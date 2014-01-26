@@ -16,11 +16,12 @@
     "send": "~0.1.0",
     "less": "~1.3.3",
     "mincer": "~0.4.6",
-    "sqwish": "~0.2.1",
     "uglify-js": "~2.3.6",
     "html-minifier": "~0.5.2",
     "walkdir": "0.0.7",
-    "ejs2": "~2.1.0"
+    "ejs2": "~2.1.0",
+    "clean-css": "~2.0.7",
+    "autoprefixer": "~1.0.20140117"
   },
   "devDependencies": {},
   "optionalDependencies": {},
