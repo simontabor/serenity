@@ -2,7 +2,7 @@
   "author": "Simon Tabor <me@simontabor.com> (simontabor.com)",
   "name": "serenity",
   "description": "Easy static site generator",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "homepage": "http://simontabor.com/labs/serenity",
   "preferGlobal": true,
   "repository": {
