@@ -2,34 +2,34 @@
   "author": "Simon Tabor <me@simontabor.com> (simontabor.com)",
   "name": "serenity",
   "description": "Easy static site generator",
-  "version": "0.1.4",
+  "version": "1.0.0",
   "homepage": "http://simontabor.com/labs/serenity",
   "preferGlobal": true,
   "repository": {
     "url": "git@github.com:simontabor/serenity.git"
   },
   "dependencies": {
-    "cli": "~0.4.4-1",
-    "fs-extra": "~0.5.0",
-    "js-yaml": "~1.0.2",
-    "watchr": "~2.3.3",
-    "send": "~0.1.0",
-    "less": "~1.3.3",
-    "mincer": "~0.4.6",
-    "html-minifier": "~0.5.2",
-    "walkdir": "0.0.7",
-    "ejs2": "~2.1.0",
-    "clean-css": "~2.0.7",
-    "uglify-js": "~2.4.13",
-    "autoprefixer": "~1.1.20140410"
+    "async": "^0.9.0",
+    "autoprefixer": "^3.0.0",
+    "clean-css": "^2.2.14",
+    "cli": "^0.6.4",
+    "ejs2": "^2.1.0",
+    "fs-extra": "^0.11.0",
+    "html-minifier": "^0.6.6",
+    "js-yaml": "^3.2.1",
+    "less": "^1.3.3",
+    "mincer": "^0.4.6",
+    "send": "^0.8.3",
+    "uglify-js": "^2.4.15",
+    "walkdir": "0.0.7"
   },
   "devDependencies": {},
   "optionalDependencies": {},
   "engines": {
     "node": "*"
   },
-  "main": "./serenity",
+  "main": "./index",
   "bin": {
-    "serenity": "./serenity.js"
+    "serenity": "./index.js"
   }
 }
