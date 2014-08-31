@@ -37,17 +37,17 @@ Running the serenity command will immediately start watching the current directo
     <td>Number. Specify the port for the server to use, defaults to 4000.</td>
   </tr>
   <tr>
-    <td>-v<td>
+    <td>-v</td>
     <td>--version</td>
     <td>Print the current version of serenity</td>
   </tr>
   <tr>
-    <td>-a<td>
+    <td>-a</td>
     <td>--asset_host</td>
     <td>Define an asset host (such as a CDN) for all compiled assets</td>
   </tr>
   <tr>
-    <td>-l<td>
+    <td>-l</td>
     <td>--live_load</td>
     <td>Generate assets on the fly as they're requested, rather than generating the entire site every time there's a change (default: false)</td>
   </tr>
