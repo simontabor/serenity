@@ -1,5 +1,6 @@
 module.exports = {
   // array of browser options for autoprefixer
+  autoprefix: true,
   autoprefixer: [],
   // folder patterns to ignore
   ignore: [ '/_site', '/.git', '/node_modules' ],
@@ -12,5 +13,11 @@ module.exports = {
   // whether to parse <markdown> or <md> elements as markdown.
   // set to the `marked` configuration object.
   // if markdown.highlight is truthy, we'll use highlight.js on code blocks
-  markdown: false
+  markdown: false,
+
+  minify: {
+    js: true,
+    css: true,
+    html: true
+  }
 };
