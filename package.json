@@ -5,6 +5,7 @@
   "version": "1.1.4",
   "homepage": "http://simontabor.com/labs/serenity",
   "preferGlobal": true,
+  "license": "MIT",
   "repository": {
     "url": "git@github.com:simontabor/serenity.git"
   },
